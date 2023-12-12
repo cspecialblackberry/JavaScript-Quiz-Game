@@ -1,0 +1,54 @@
+:root {
+    --lightred: #DE3C4B;
+    --darkred: #C42847;
+}
+
+body{
+    background-color: var(--darkred);
+}
+
+header{
+    height: 200px;
+    background-color: var(--lightred);
+    display: flex;
+    align-items: center;
+    padding: 15px;
+}
+
+.game-section{
+    height: 300px;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    padding: 15px;
+}
+
+.question-section{
+    width: 60%;
+    margin-right: 2.5%;
+    background-color: var(--lightred);
+    padding: 25px;
+}
+
+.button-section{
+    width: 30%;
+    margin-left: 2.5%;
+    margin-right:2.5%;
+    background-color: var(--lightred);
+    padding: 25px;
+}
+
+.leaderboard-section{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color: var(--lightred);
+    height: 100px;
+    padding: 25px;
+}
+
+
+
+
+
+
