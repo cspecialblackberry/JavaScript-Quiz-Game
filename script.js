@@ -1,13 +1,13 @@
 // GIVEN I am taking a code quiz
 
 // WHEN I click the start button
-// THEN a timer starts and I am presented with a question
+// THEN a timer starts and I am presented with a question DONE
 
 // WHEN I answer a question
-// THEN I am presented with another question
+// THEN I am presented with another question DONE
 
 // WHEN I answer a question incorrectly
-// THEN time is subtracted from the clock
+// THEN time is subtracted from the clock DONE 
 
 // WHEN all questions are answered or the timer reaches 0
 // THEN the game is over
@@ -16,27 +16,31 @@
 // THEN I can save my initials and my score
 
 const startButton = document.querySelector('#startButton')
-console.log(startButton)
+const buttonSection = document.querySelector('#button-section')
 let timer = document.querySelector('#timer')
-console.log(timer)
 let question = document.querySelector('#question')
-console.log(question)
 let answerOne = document.querySelector('#answerOne')
-console.log(answerOne)
 let answerTwo = document.querySelector('#answerTwo')
-console.log(answerTwo)
 let answerThree = document.querySelector('#answerThree')
-console.log(answerThree)
 let answerFour = document.querySelector('#answerFour')
-console.log(answerFour)
 const answerList = document.querySelector('#answerList')
-console.log(answerList)
 let answerIndicator = document.querySelector('#answerIndicator')
-console.log(answerIndicator)
+let initials = document.querySelector('#initials')
+let score = document.querySelector('#score')
+const initialsInput = document.createElement('input')
+initialsInput.setAttribute('class', 'initials-input')
+const initialsInputButton = document.createElement('button')
+initialsInputButton.textContent = 'submit'
+initialsInputButton.setAttribute('class', 'initials-input-button')
+
+if (localStorage.getItem('initials') && localStorage.getItem('score')){
+    initials.textContent = ("Initials= " + localStorage.getItem('initials'))
+    score.textContent = ("Score= " + localStorage.getItem('score'))
+}
 
 const questions = [
     {
-        question: "Which of the following is not a Javascript data type?",
+        question: "Which of the following is NOT a Javascript data type?",
         answer1: "string",
         answer2: "boolean",
         answer3: "conditional statement",
@@ -54,47 +58,86 @@ const questions = [
     },
 
     {
-        question: "Which of the following is not a Javascript data type?",
-        answer1: "string",
-        answer2: "boolean",
-        answer3: "conditional statement",
-        answer4: "number",
-        correctAnswer: "conditional statement"
+        question: "Which variable type can not be changed?",
+        answer1: "var",
+        answer2: "const",
+        answer3: "let",
+        answer4: "log",
+        correctAnswer: "const"
     },
 
     {
-        question: "Which of the following is not a Javascript data type?",
-        answer1: "string",
-        answer2: "boolean",
-        answer3: "conditional statement",
-        answer4: "number",
-        correctAnswer: "conditional statement"
-    }
+        question: "Which of the following is NOT a comparison operator?",
+        answer1: "<=",
+        answer2: "||",
+        answer3: "===",
+        answer4: ">",
+        correctAnswer: "||"
+    },
+
+    {
+        question: "",
+        answer1: "",
+        answer2: "",
+        answer3: "",
+        answer4: "",
+        correctAnswer: "",
+    },
+
+    {
+        question: "",
+        answer1: "",
+        answer2: "",
+        answer3: "",
+        answer4: "",
+        correctAnswer: "",
+    },
 
 ]
 
 let timerIndex = 60
 let currentIndex = 0
+let finalScore = 0
 
 const runGame = (event) => {
     event.preventDefault()
     timerIndex = 60
     currentIndex = 0
     timer.textContent = timerIndex
+    answerIndicator.textContent = ""
+
+
+    const endGame = () => {
+        finalScore = timerIndex
+        console.log(finalScore)
+        localStorage.setItem("score", finalScore)
+        buttonSection.appendChild(initialsInput)
+        buttonSection.appendChild(initialsInputButton)
+        const setInitials = (event) => {
+            event.preventDefault()
+            console.log(initialsInput.value)
+            localStorage.setItem("initials", initialsInput.value)
+            initials.textContent = ("Initials= " + localStorage.getItem('initials'))
+            score.textContent = ("Score= " + localStorage.getItem('score'))
+        }
+        initialsInputButton.addEventListener('click', setInitials)
+    }
+
     const runTimer = () => {
         if (currentIndex >= questions.length) {
-            clearInterval()
+            endGame()
+            clearInterval(timerFunction)
         } else if (timerIndex > 0) {
             timerIndex--
             timer.textContent = timerIndex
         }
         else {
-            clearInterval()
+            clearInterval(timerFunction)
             timer.textContent = "Ran out of time, try again!"
         }
     }
 
-    setInterval(runTimer, 1000);
+    const timerFunction = setInterval(runTimer, 1000);
 
 
     const cycleQuestions = () => {
@@ -114,12 +157,8 @@ const runGame = (event) => {
 
     const checkAnswer = (event) => {
         event.preventDefault()
-        console.log(event.target.textContent)
-        console.log(questions[currentIndex].correctAnswer)
-
         if (event.target.textContent === questions[currentIndex].correctAnswer) {
             answerIndicator.textContent = "Correct!"
-            timerIndex += 5
             currentIndex++
             cycleQuestions()
         } else {
@@ -130,6 +169,7 @@ const runGame = (event) => {
 
 
     answerList.addEventListener('click', checkAnswer)
+    answerList.addEventListener('touch', checkAnswer)
 }
 
 startButton.addEventListener('click', runGame)
