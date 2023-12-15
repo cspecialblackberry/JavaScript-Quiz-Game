@@ -1,18 +1,20 @@
 :root {
-    --lightred: #DE3C4B;
-    --darkred: #C42847;
+    --darkgreen: #1D3557;
+    --lightgreen: #D5F2E3;
+    --lightergreen: #EAF6FF;
 }
 
 body{
-    background-color: var(--darkred);
+    background-color: var(--lightgreen);
 }
 
 header{
     height: 150px;
-    background-color: var(--lightred);
+    background-color: var(--darkgreen);
     display: flex;
     align-items: center;
     padding: 15px;
+    color: var(--lightergreen)
 }
 
 .game-section{
@@ -21,12 +23,13 @@ header{
     display: flex;
     flex-direction: row;
     padding: 15px;
+    color: var(--lightergreen)
 }
 
 .question-section{
     width: 60%;
     margin-right: 2.5%;
-    background-color: var(--lightred);
+    background-color: var(--darkgreen);
     padding: 25px;
     /* cursor: pointer; */
 }
@@ -35,26 +38,31 @@ li:hover{
     cursor: pointer;
 }
 
+.hide-answer-list{
+    display: none;
+}
+
 #button-section{
     width: 30%;
     margin-left: 2.5%;
     margin-right:2.5%;
-    background-color: var(--lightred);
+    background-color: var(--darkgreen);
     padding: 25px;
 }
 
 .initials-input{
-    background-color: var(--lightred);
-    border-color: var(--darkred);
+    background-color: var(--darkgreen);
+    border-color: var(--lightgreen);
 }
 
 .leaderboard-section{
     display: flex;
     flex-direction: row;
     justify-content: space-evenly;
-    background-color: var(--lightred);
+    background-color: var(--darkgreen);
     height: 50px;
     padding: 25px;
+    color: var(--lightergreen)
 }
 
 

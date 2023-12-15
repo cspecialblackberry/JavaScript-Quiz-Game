@@ -23,17 +23,18 @@ let answerOne = document.querySelector('#answerOne')
 let answerTwo = document.querySelector('#answerTwo')
 let answerThree = document.querySelector('#answerThree')
 let answerFour = document.querySelector('#answerFour')
-const answerList = document.querySelector('#answerList')
+let answerList = document.querySelector('#answerList')
 let answerIndicator = document.querySelector('#answerIndicator')
 let initials = document.querySelector('#initials')
 let score = document.querySelector('#score')
 const initialsInput = document.createElement('input')
 initialsInput.setAttribute('class', 'initials-input')
+initialsInput.textContent = "Enter your initials!"
 const initialsInputButton = document.createElement('button')
-initialsInputButton.textContent = 'submit'
+initialsInputButton.textContent = 'Submit'
 initialsInputButton.setAttribute('class', 'initials-input-button')
 
-if (localStorage.getItem('initials') && localStorage.getItem('score')){
+if (localStorage.getItem('initials') && localStorage.getItem('score')) {
     initials.textContent = ("Initials= " + localStorage.getItem('initials'))
     score.textContent = ("Score= " + localStorage.getItem('score'))
 }
@@ -54,7 +55,7 @@ const questions = [
         answer2: "as many as there are when it is first initialized",
         answer3: "25",
         answer4: "any number",
-        correctAnswer: "any number"
+        correctAnswer: "any number",
     },
 
     {
@@ -76,64 +77,80 @@ const questions = [
     },
 
     {
-        question: "",
-        answer1: "",
-        answer2: "",
-        answer3: "",
-        answer4: "",
-        correctAnswer: "",
+        question: "What kind of objects allow us to call upon a block of code to perform a certain task anywhere in our code?",
+        answer1: "method",
+        answer2: "function",
+        answer3: "boolean",
+        answer4: "forEach",
+        correctAnswer: "function",
     },
 
     {
-        question: "",
-        answer1: "",
-        answer2: "",
-        answer3: "",
-        answer4: "",
-        correctAnswer: "",
+        question: "What can we use to perform a task a set number of times",
+        answer1: "return",
+        answer2: "object",
+        answer3: "function",
+        answer4: "for-loop",
+        correctAnswer: "for-loop",
     },
 
 ]
 
 let timerIndex = 60
 let currentIndex = 0
-let finalScore = 0
 
 const runGame = (event) => {
     event.preventDefault()
+    event.stopPropagation()
     timerIndex = 60
+    console.log(timerIndex)
     currentIndex = 0
+    console.log(currentIndex)
     timer.textContent = timerIndex
     answerIndicator.textContent = ""
+    answerList.removeAttribute("class", "hide-answer-list")
+    answerIndicator.removeAttribute("class", "hide-answer-list")
 
+    const removeContent = () => {
+        answerList.setAttribute('class', 'hide-answer-list')
+        answerIndicator.setAttribute('class', 'hide-answer-list')
+        if (currentIndex >= questions.length) {
+            question.textContent = "Congratulations, you conquered the Javascript Brain Trip! Enter your initials again to save your score. Hit the start button again to try and beat your score!"
+        }else{
+            question.textContent = "You, ran out of time, click the start button to try again!"
+        }
+    }
 
     const endGame = () => {
-        finalScore = timerIndex
-        console.log(finalScore)
-        localStorage.setItem("score", finalScore)
-        buttonSection.appendChild(initialsInput)
-        buttonSection.appendChild(initialsInputButton)
-        const setInitials = (event) => {
-            event.preventDefault()
-            console.log(initialsInput.value)
-            localStorage.setItem("initials", initialsInput.value)
-            initials.textContent = ("Initials= " + localStorage.getItem('initials'))
-            score.textContent = ("Score= " + localStorage.getItem('score'))
+        clearInterval(timerFunction)
+        if (currentIndex >= questions.length) {
+            buttonSection.appendChild(initialsInput)
+            buttonSection.appendChild(initialsInputButton)
+            removeContent()
+            const setScore = (event) => {
+                event.preventDefault()
+                localStorage.setItem("initials", initialsInput.value)
+                localStorage.setItem("score", timerIndex)
+                initials.textContent = ("Initials= " + localStorage.getItem('initials'))
+                score.textContent = ("Score= " + localStorage.getItem('score'))
+                buttonSection.removeChild(initialsInput)
+                buttonSection.removeChild(initialsInputButton)
+            }
+            initialsInputButton.addEventListener('click', setScore)
+        } else {
+            timer.textContent = "Ran out of time, try again!"
+            removeContent()
         }
-        initialsInputButton.addEventListener('click', setInitials)
     }
 
     const runTimer = () => {
-        if (currentIndex >= questions.length) {
-            endGame()
-            clearInterval(timerFunction)
-        } else if (timerIndex > 0) {
+        if (timerIndex > 0) {
             timerIndex--
             timer.textContent = timerIndex
-        }
-        else {
+        } else {
             clearInterval(timerFunction)
             timer.textContent = "Ran out of time, try again!"
+            endGame()
         }
     }
 
@@ -143,9 +160,14 @@ const runGame = (event) => {
     const cycleQuestions = () => {
         if (currentIndex >= questions.length) {
             timer.textContent = "You win!"
-            runTimer()
+            clearInterval(timerFunction)
+            endGame()
             return
         }
+        console.log(answerList)
+        console.log(currentIndex)
+        console.log(timerIndex)
+        console.log(questions[currentIndex].correctAnswer)
         question.textContent = questions[currentIndex].question
         answerOne.textContent = questions[currentIndex].answer1
         answerTwo.textContent = questions[currentIndex].answer2
@@ -157,9 +179,13 @@ const runGame = (event) => {
 
     const checkAnswer = (event) => {
         event.preventDefault()
+        event.stopPropagation()
+        console.log(event.target.textContent)
+        console.log(event.target.textContent === questions[currentIndex].correctAnswer)
         if (event.target.textContent === questions[currentIndex].correctAnswer) {
             answerIndicator.textContent = "Correct!"
             currentIndex++
+            console.log(currentIndex)
             cycleQuestions()
         } else {
             timerIndex -= 10
@@ -173,3 +199,4 @@ const runGame = (event) => {
 }
 
 startButton.addEventListener('click', runGame)
+startButton.addEventListener('touch', runGame)
