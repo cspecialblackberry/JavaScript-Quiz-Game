@@ -101,22 +101,20 @@ let currentIndex = 0
 
 const runGame = (event) => {
     event.preventDefault()
-    event.stopPropagation()
     timerIndex = 60
-    console.log(timerIndex)
     currentIndex = 0
-    console.log(currentIndex)
     timer.textContent = timerIndex
     answerIndicator.textContent = ""
     answerList.removeAttribute("class", "hide-answer-list")
     answerIndicator.removeAttribute("class", "hide-answer-list")
+
 
     const removeContent = () => {
         answerList.setAttribute('class', 'hide-answer-list')
         answerIndicator.setAttribute('class', 'hide-answer-list')
         if (currentIndex >= questions.length) {
             question.textContent = "Congratulations, you conquered the Javascript Brain Trip! Enter your initials again to save your score. Hit the start button again to try and beat your score!"
-        }else{
+        } else {
             question.textContent = "You, ran out of time, click the start button to try again!"
         }
     }
@@ -141,6 +139,8 @@ const runGame = (event) => {
             timer.textContent = "Ran out of time, try again!"
             removeContent()
         }
+        answerList.removeEventListener('click', checkAnswer)
+        answerList.removeEventListener('touch', checkAnswer)
     }
 
     const runTimer = () => {
@@ -164,10 +164,6 @@ const runGame = (event) => {
             endGame()
             return
         }
-        console.log(answerList)
-        console.log(currentIndex)
-        console.log(timerIndex)
-        console.log(questions[currentIndex].correctAnswer)
         question.textContent = questions[currentIndex].question
         answerOne.textContent = questions[currentIndex].answer1
         answerTwo.textContent = questions[currentIndex].answer2
@@ -175,17 +171,11 @@ const runGame = (event) => {
         answerFour.textContent = questions[currentIndex].answer4
     }
 
-    cycleQuestions()
-
     const checkAnswer = (event) => {
         event.preventDefault()
-        event.stopPropagation()
-        console.log(event.target.textContent)
-        console.log(event.target.textContent === questions[currentIndex].correctAnswer)
         if (event.target.textContent === questions[currentIndex].correctAnswer) {
             answerIndicator.textContent = "Correct!"
             currentIndex++
-            console.log(currentIndex)
             cycleQuestions()
         } else {
             timerIndex -= 10
@@ -193,9 +183,14 @@ const runGame = (event) => {
         }
     }
 
+    const addClicks = () => {
+        answerList.addEventListener('click', checkAnswer,)
+        answerList.addEventListener('touch', checkAnswer,)
+        cycleQuestions()
+    }
 
-    answerList.addEventListener('click', checkAnswer)
-    answerList.addEventListener('touch', checkAnswer)
+    addClicks()
+
 }
 
 startButton.addEventListener('click', runGame)
