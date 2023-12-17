@@ -14,7 +14,10 @@ header{
     display: flex;
     align-items: center;
     padding: 15px;
-    color: var(--lightergreen)
+    color: var(--lightergreen);
+    font-family: "Silkscreen";
+    font-size: 2rem;
+    font-weight: 400
 }
 
 .game-section{
@@ -53,6 +56,7 @@ li:hover{
 .initials-input{
     background-color: var(--darkgreen);
     border-color: var(--lightgreen);
+    color: var(--lightergreen);
 }
 
 .leaderboard-section{

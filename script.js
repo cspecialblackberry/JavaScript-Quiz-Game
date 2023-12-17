@@ -34,11 +34,13 @@ const initialsInputButton = document.createElement('button')
 initialsInputButton.textContent = 'Submit'
 initialsInputButton.setAttribute('class', 'initials-input-button')
 
+//check if the user has a score in local storage and puts it on the page if so
 if (localStorage.getItem('initials') && localStorage.getItem('score')) {
     initials.textContent = ("Initials= " + localStorage.getItem('initials'))
     score.textContent = ("Score= " + localStorage.getItem('score'))
 }
 
+//question array
 const questions = [
     {
         question: "Which of the following is NOT a Javascript data type?",
@@ -99,6 +101,8 @@ const questions = [
 let timerIndex = 60
 let currentIndex = 0
 
+//resets all variables to their default and calls the first game function. Also removes input box if user didn't
+//input their score.
 const runGame = (event) => {
     event.preventDefault()
     timerIndex = 60
@@ -107,60 +111,64 @@ const runGame = (event) => {
     answerIndicator.textContent = ""
     answerList.removeAttribute("class", "hide-answer-list")
     answerIndicator.removeAttribute("class", "hide-answer-list")
+    if(buttonSection.children.length===4){
+        buttonSection.removeChild(initialsInput)
+        buttonSection.removeChild(initialsInputButton)
+    }
 
 
+    //removes question list and posts congratulation or loss messages when the game is ended.
     const removeContent = () => {
         answerList.setAttribute('class', 'hide-answer-list')
         answerIndicator.setAttribute('class', 'hide-answer-list')
         if (currentIndex >= questions.length) {
+            timer.textContent = "You win!"
             question.textContent = "Congratulations, you conquered the Javascript Brain Trip! Enter your initials again to save your score. Hit the start button again to try and beat your score!"
         } else {
             question.textContent = "You, ran out of time, click the start button to try again!"
+            timer.textContent = "Ran out of time, try again!"
         }
     }
 
+    //puts score in local storage and puts it to the page.
+    const setScore = (event) => {
+        event.preventDefault()
+        localStorage.setItem("initials", initialsInput.value)
+        localStorage.setItem("score", timerIndex)
+        initials.textContent = ("Initials= " + localStorage.getItem('initials'))
+        score.textContent = ("Score= " + localStorage.getItem('score'))
+        buttonSection.removeChild(initialsInput)
+        buttonSection.removeChild(initialsInputButton)
+    }
+
+    //ends the timer, removes event listeners from the answer list and adds an input box if the user won.
     const endGame = () => {
         clearInterval(timerFunction)
         if (currentIndex >= questions.length) {
             buttonSection.appendChild(initialsInput)
             buttonSection.appendChild(initialsInputButton)
-            removeContent()
-            const setScore = (event) => {
-                event.preventDefault()
-                localStorage.setItem("initials", initialsInput.value)
-                localStorage.setItem("score", timerIndex)
-                initials.textContent = ("Initials= " + localStorage.getItem('initials'))
-                score.textContent = ("Score= " + localStorage.getItem('score'))
-                buttonSection.removeChild(initialsInput)
-                buttonSection.removeChild(initialsInputButton)
-            }
             initialsInputButton.addEventListener('click', setScore)
-        } else {
-            timer.textContent = "Ran out of time, try again!"
-            removeContent()
         }
+        removeContent()
         answerList.removeEventListener('click', checkAnswer)
         answerList.removeEventListener('touch', checkAnswer)
     }
 
+    //decrements the timer if it is above zero, ends the game otherwise.
     const runTimer = () => {
         if (timerIndex > 0) {
             timerIndex--
             timer.textContent = timerIndex
         } else {
-            clearInterval(timerFunction)
-            timer.textContent = "Ran out of time, try again!"
             endGame()
         }
     }
 
     const timerFunction = setInterval(runTimer, 1000);
 
-
+    //checks if the user has completed all questions, if they have ends the game if not, cycles to the next question.
     const cycleQuestions = () => {
         if (currentIndex >= questions.length) {
-            timer.textContent = "You win!"
-            clearInterval(timerFunction)
             endGame()
             return
         }
@@ -171,6 +179,8 @@ const runGame = (event) => {
         answerFour.textContent = questions[currentIndex].answer4
     }
 
+    //compares the selected answer to the correct answer, if it is correct increments the question index and calls
+    //to cycle questions, if incorrect subtracts ten seconds from the game timer.
     const checkAnswer = (event) => {
         event.preventDefault()
         if (event.target.textContent === questions[currentIndex].correctAnswer) {
@@ -183,6 +193,7 @@ const runGame = (event) => {
         }
     }
 
+    //adds event listeners to the answer list and calls to cycle to the first question.
     const addClicks = () => {
         answerList.addEventListener('click', checkAnswer,)
         answerList.addEventListener('touch', checkAnswer,)
