@@ -160,6 +160,7 @@ const runGame = (event) => {
         localStorage.setItem("score", timerIndex)
         initials.textContent = ("Initials= " + localStorage.getItem('initials'))
         score.textContent = ("Score= " + localStorage.getItem('score'))
+        initialsInput.value = ""
         initialsInputSection.removeChild(initialsInput)
         initialsInputSection.removeChild(initialsInputButton)
     }
