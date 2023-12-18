@@ -84,8 +84,8 @@ const questions = [
     {
         question: "Which of the following evaluates to true?",
         answer1: "14*3 < 24",
-        answer2: "262>254 && 14>54",
-        answer3: "213<1347 || 24*3 > 81",
+        answer2: "262>254 && 54<14",
+        answer3: "213>1347 || 24*3 > 81",
         answer4: "2002 > 2000",
         correctAnswer: "2002 > 2000"
     },
