@@ -1,20 +1,4 @@
-// GIVEN I am taking a code quiz
-
-// WHEN I click the start button
-// THEN a timer starts and I am presented with a question DONE
-
-// WHEN I answer a question
-// THEN I am presented with another question DONE
-
-// WHEN I answer a question incorrectly
-// THEN time is subtracted from the clock DONE 
-
-// WHEN all questions are answered or the timer reaches 0
-// THEN the game is over
-
-// WHEN the game is over
-// THEN I can save my initials and my score
-
+//query selectore
 const startButton = document.querySelector('#startButton')
 const buttonSection = document.querySelector('#button-section')
 let timer = document.querySelector('#timer')
@@ -27,9 +11,10 @@ let answerList = document.querySelector('#answerList')
 let answerIndicator = document.querySelector('#answerIndicator')
 let initials = document.querySelector('#initials')
 let score = document.querySelector('#score')
+const initialsInputSection = document.querySelector('#initialsInputSection')
 const initialsInput = document.createElement('input')
 initialsInput.setAttribute('class', 'initials-input')
-initialsInput.textContent = "Enter your initials!"
+initialsInput.placeholder = "Enter your initials!"
 const initialsInputButton = document.createElement('button')
 initialsInputButton.textContent = 'Submit'
 initialsInputButton.setAttribute('class', 'initials-input-button')
@@ -96,12 +81,49 @@ const questions = [
         correctAnswer: "for-loop",
     },
 
+    {
+        question: "Which of the following evaluates to true?",
+        answer1: "14*3 < 24",
+        answer2: "262>254 && 14>54",
+        answer3: "213<1347 || 24*3 > 81",
+        answer4: "2002 > 2000",
+        correctAnswer: "2002 > 2000"
+    },
+
+    {
+        question: "What funtion can we use to send a message to dev tools?",
+        answer1: "consoleLog",
+        answer2: ".sendMessage",
+        answer3: "logMessage",
+        answer4: ".setAttribute",
+        correctAnswer: "consoleLog"
+    },
+
+    {
+        question: "What is the DOM?",
+        answer1: "Database of metadata",
+        answer2: "Document object model",
+        answer3: "Distinct operator methods",
+        answer4: "Data object material",
+        correctAnswer: "Document object model"
+    },
+
+    {
+        question: "Why is Javascript important?",
+        answer1: "Without it there would be no wifi.",
+        answer2: "It provides interactivity to websites.",
+        answer3: "It stores personal user data.",
+        answer4: "It places content onto webpages determines the way they appear.",
+        correctAnswer: "It provides interactivity to websites."
+    },
+
 ]
 
 let timerIndex = 60
 let currentIndex = 0
+answerList.setAttribute("class", "hide-answer-list")
 
-//resets all variables to their default and calls the first game function. Also removes input box if user didn't
+//resets all variables to their default, removes the start button and calls the first game function. Also removes input box if user didn't
 //input their score.
 const runGame = (event) => {
     event.preventDefault()
@@ -111,9 +133,10 @@ const runGame = (event) => {
     answerIndicator.textContent = ""
     answerList.removeAttribute("class", "hide-answer-list")
     answerIndicator.removeAttribute("class", "hide-answer-list")
-    if(buttonSection.children.length===4){
-        buttonSection.removeChild(initialsInput)
-        buttonSection.removeChild(initialsInputButton)
+    startButton.setAttribute("class", "hide-start-button")
+    if(initialsInputSection.children.length===2){
+        initialsInputSection.removeChild(initialsInput)
+        initialsInputSection.removeChild(initialsInputButton)
     }
 
 
@@ -137,16 +160,17 @@ const runGame = (event) => {
         localStorage.setItem("score", timerIndex)
         initials.textContent = ("Initials= " + localStorage.getItem('initials'))
         score.textContent = ("Score= " + localStorage.getItem('score'))
-        buttonSection.removeChild(initialsInput)
-        buttonSection.removeChild(initialsInputButton)
+        initialsInputSection.removeChild(initialsInput)
+        initialsInputSection.removeChild(initialsInputButton)
     }
 
     //ends the timer, removes event listeners from the answer list and adds an input box if the user won.
     const endGame = () => {
         clearInterval(timerFunction)
+        startButton.removeAttribute("class", "hide-start-button")
         if (currentIndex >= questions.length) {
-            buttonSection.appendChild(initialsInput)
-            buttonSection.appendChild(initialsInputButton)
+            initialsInputSection.appendChild(initialsInput)
+            initialsInputSection.appendChild(initialsInputButton)
             initialsInputButton.addEventListener('click', setScore)
         }
         removeContent()
